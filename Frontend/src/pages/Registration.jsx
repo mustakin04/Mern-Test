@@ -2,11 +2,36 @@ import React, { useState } from 'react';
 import reg from "../assets/registration.jpg";
 import Container from '../component/Container';
 import { FaEyeSlash, FaEye } from "react-icons/fa6";
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Registration = () => {
   const [show, setShow] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const[formData,setFormData]=useState({
+    fullName:"",
+    email:"",
+    password:"",
+    repassword:"",
+  })
+    
+  const handleChange=(e)=>{
+       setFormData({...formData,[e.target.name] : e.target.value})
+  }
+  const handleClick = async () => {
+  try {
+    const response = await axios.post(
+      'http://localhost:3002/api/v1/authentication/registration',
+      formData
+    );
 
+    toast.success(response.data.message); 
+  } catch (error) {
+    const message = error.response?.data?.message || "Something went wrong";
+    toast.error(message)
+  }
+     
+  }
   return (
     <div className="py-10">
       <Container>
@@ -33,7 +58,9 @@ const Registration = () => {
             {/* Full Name */}
             <div>
               <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Full Name</p>
-              <input
+              <input 
+                name='fullName'
+                onChange={handleChange}
                 type="text"
                 className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
                 placeholder="Enter your full name"
@@ -44,6 +71,8 @@ const Registration = () => {
             <div className="my-6">
               <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Email Address</p>
               <input
+                 name='email'
+                 onChange={handleChange}
                 type="email"
                 className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
                 placeholder="Enter your email address"
@@ -54,6 +83,8 @@ const Registration = () => {
             <div className="relative my-6">
               <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Password</p>
               <input
+               name='password'
+                 onChange={handleChange}
                 type={show ? "text" : "password"}
                 className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
                 placeholder="********"
@@ -70,6 +101,8 @@ const Registration = () => {
             <div className="relative">
               <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Confirm Password</p>
               <input
+              name='repassword'
+                 onChange={handleChange}
                 type={confirm ? "text" : "password"}
                 className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
                 placeholder="Retype Password"
@@ -83,7 +116,9 @@ const Registration = () => {
             </div>
 
             {/* Sign Up Button */}
-            <div className="w-full bg-[#60e5ae] my-8 rounded-md cursor-pointer hover:bg-[#4ad49b] transition">
+            <div className="w-full bg-[#60e5ae] my-8 rounded-md cursor-pointer hover:bg-[#4ad49b]
+             transition"
+             onClick={handleClick}>
               <p className="font-semibold text-[17px] text-center py-3">Sign Up</p>
             </div>
 
@@ -101,7 +136,9 @@ const Registration = () => {
                 <span className="text-[#1f1f1f] cursor-pointer hover:underline">Log In</span>
               </p>
             </div>
+           
           </div>
+          <Toaster />
         </div>
       </Container>
     </div>
