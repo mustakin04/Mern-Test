@@ -3,9 +3,9 @@
 
 const User = require("../models/userSchema");
 const emailValidator = require("../utils/email.validator");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const passwordValidation = require("../utils/passwordValidation");
-
+const jwt = require("jsonwebtoken");
 
 const registrationController = async (req, res) => {
   try {
@@ -28,29 +28,26 @@ const registrationController = async (req, res) => {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    //  2️⃣ Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ message: "Email already registered" });
     }
-
-    // 3️⃣ Hash Password
+    const token = jwt.sign({ id:email }, process.env.JWT_SECRET);
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 4️⃣ Save new user
     const newUser = new User({
       fullName,
       email,
       password: hashedPassword,
+      token
     });
 
     await newUser.save();
 
     // 5️⃣ Respond with success
-    res.status(201).json(
-        { message: "User registered successfully",
-            data:newUser
-         });
+    res
+      .status(201)
+      .json({ message: "User registered successfully", data: newUser });
   } catch (error) {
     console.error("❌ Registration Error:", error.message);
     res.status(500).json({ message: "Server error" });

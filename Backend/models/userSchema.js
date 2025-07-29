@@ -14,6 +14,9 @@ const userSchema=new Schema({
     type: String,
     required: true,
   },
+  token:{
+    type:String,
+  }
 },
  {timestamps: true });
 module.exports=mongoose.model("User",userSchema)
