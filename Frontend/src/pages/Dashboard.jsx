@@ -13,6 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router";
 import { useDispatch } from "react-redux";
 import { userData } from "../../slices/cardSlices";
+import PrivateRoute from "../component/PrivateRoute";
 
 const Dashboard = () => {
   const dispatch=useDispatch()
@@ -102,7 +103,8 @@ const Dashboard = () => {
   }, [data]);
 
   return (
-    <div>
+     <PrivateRoute>
+       <div>
       <div
         className="w-full h-[300px] bg-no-repeat bg-center bg-cover"
         style={{ backgroundImage: `url(${banner})` }}
@@ -263,6 +265,7 @@ const Dashboard = () => {
         <Toaster />
       </div>
     </div>
+     </PrivateRoute>
   );
 };
 

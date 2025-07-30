@@ -1,11 +1,11 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; // ✅ Fix: use react-router-dom
+import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
 import './App.css';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import TaskDetails from './pages/TaskDetails';
 import SpinWheel from './pages/SpinWeel';
 import Registration from './pages/Registration';
-import { Provider } from 'react-redux'// ✅ Fix: corrected path (assumed store.js is in src folder)
+import { Provider } from 'react-redux'
 import { store } from "../store";
 
 const router = createBrowserRouter([

@@ -53,5 +53,17 @@ const registrationController = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+const getUser=async(req,res)=>{
+        try{
+          const user=await User.find({})
+          if (!user) {
+          return res.status(409).json({ message: "not found" });}
+         res.status(201).json({ message: "User found successfully", data: user });
+    
+        }catch(error){
+            console.error("❌ Registration Error:", error.message);
+             res.status(500).json({ message: "Server error" });
+        }
+}
 
-module.exports = registrationController;
+module.exports = {registrationController,getUser};
