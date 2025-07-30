@@ -7,25 +7,27 @@ import './App.css'
 import Registration from './pages/registration';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import TaskDetails from './pages/TaskDetails';
 
 function App() {
  const router = createBrowserRouter([
- {
+  {
     path: "/",
     Component: Registration,
-    // children: [
-    //   { index: true, Component: Login},
-    //   { path: "/login", Component: Login },
-    // ],
   },
   {
-    path:"/login",
-    Component:Login,
+    path: "/login",
+    Component: Login,
   },
-   {
-    path:"/dashboard",
-    Component:Dashboard,
-  }
+  {
+    path: "/dashboard",
+    Component: Dashboard,
+  },
+    {
+    path: "/taskDetails/:id",
+    Component: TaskDetails,
+  },
+
 ]);
 
   return (

@@ -10,6 +10,7 @@ import { LuDot } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { Link } from "react-router";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -20,6 +21,7 @@ const Dashboard = () => {
     date: "",
     priority: "",
   });
+  const [data, setData] = useState(""); // priority filter
 
   const handleClick = () => {
     setShow(true);
@@ -40,8 +42,17 @@ const Dashboard = () => {
         "http://localhost:3002/api/v1/task/getAllTask",
         { withCredentials: true }
       );
-      setAllTask(response.data.task);
-      setShow(false)
+
+      const alltask = response.data.task;
+
+      if (data) {
+        const filtertask = alltask.filter((task) => task.priority === data);
+        setAllTask(filtertask);
+      } else {
+        setAllTask(alltask);
+      }
+
+      setShow(false);
     } catch (error) {
       console.error("❌ Error fetching tasks:", error.response?.data || error.message);
     }
@@ -49,33 +60,41 @@ const Dashboard = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await axios.post(
+      const result = await axios.post(
         "http://localhost:3002/api/v1/task/createTask",
         formData
       );
-      toast.success(data.data.message);
+      toast.success(result.data.message);
       setShow(false);
       setFormData({ title: "", description: "", date: "", priority: "" });
-      getTask(); // refresh tasks after creating
+      getTask();
     } catch (error) {
       const message = error?.response?.data?.message || "Something went wrong";
       toast.error(message);
     }
   };
-   const handleDelete=async(id)=>{
-       try{
-         const deleteTask=await 
-        axios.delete(`http://localhost:3002/api/v1/task/deletedSingleTask/${id}`)
-        toast.success(deleteTask.data.message)
-        setAllTask((prevTasks) => prevTasks.filter((task) => task._id !== id));
-       }catch(error){
-        toast.error(error.message)
-       }
-   }
 
+  const handleDelete = async (id) => {
+    try {
+      const deleteTask = await axios.delete(
+        `http://localhost:3002/api/v1/task/deletedSingleTask/${id}`
+      );
+      toast.success(deleteTask.data.message);
+      setAllTask((prevTasks) => prevTasks.filter((task) => task._id !== id));
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  // Fetch all tasks on first load
   useEffect(() => {
-    getTask(); // fetch on first load only
+    getTask();
   }, []);
+
+  // Re-fetch when `data` (priority filter) changes
+  useEffect(() => {
+    getTask();
+  }, [data]);
 
   return (
     <div>
@@ -94,6 +113,7 @@ const Dashboard = () => {
                 Welcome to Dashboard
               </h1>
             </div>
+
             <div className="absolute w-full bg-white py-12 px-5 border">
               <div className="flex justify-between">
                 <div>
@@ -102,26 +122,17 @@ const Dashboard = () => {
                   </p>
                 </div>
                 <div className="flex gap-3">
+                  {/* Priority Filter */}
                   <div className="w-72">
-                    <Select label="Select Version">
-                      <Option>Material Tailwind HTML</Option>
-                      <Option>Material Tailwind React</Option>
-                      <Option>Material Tailwind Vue</Option>
-                      <Option>Material Tailwind Angular</Option>
-                      <Option>Material Tailwind Svelte</Option>
+                    <Select label="Filter by Priority" value={data} onChange={(val) => setData(val)}>
+                      <Option value="Pending">Pending</Option>
+                      <Option value="Done">Done</Option>
+                      <Option value="InProgress">InProgress</Option>
                     </Select>
                   </div>
-                  <div className="w-72">
-                    <Select label="Select Version">
-                      <Option>Material Tailwind HTML</Option>
-                      <Option>Material Tailwind React</Option>
-                      <Option>Material Tailwind Vue</Option>
-                      <Option>Material Tailwind Angular</Option>
-                      <Option>Material Tailwind Svelte</Option>
-                    </Select>
-                  </div>
+                  {/* Add Task Button */}
                   <div
-                    className="w-72 rounded-md bg-[#60e5ae] py-[12px] px-[44px]"
+                    className="w-72 rounded-md bg-[#60e5ae] py-[12px] px-[44px] cursor-pointer"
                     onClick={handleClick}
                   >
                     <div className="flex gap-[10px]">
@@ -136,8 +147,9 @@ const Dashboard = () => {
 
               {/* Task List */}
               <div className="flex flex-wrap gap-5 mt-[46px]">
-                {allTask.map(({_id,title,description,date,priority}, index) => (
-                  <div
+                {allTask.map(({ _id, title, description, date, priority }, index) => (
+                  <Link
+                    to={`/taskDetails/${_id}`}
                     key={index}
                     className="w-[404px] p-3 h-[176px] border shadow-sm"
                   >
@@ -151,8 +163,13 @@ const Dashboard = () => {
                         </h3>
                       </div>
                       <div>
-                        <RiDeleteBin5Line className="text-2xl text-[#ff4c24]"
-                        onClick={()=>handleDelete(_id)} />
+                        <RiDeleteBin5Line
+                          className="text-2xl text-[#ff4c24] cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault(); // prevent navigation
+                            handleDelete(_id);
+                          }}
+                        />
                       </div>
                     </div>
                     <div className="ml-12 mb-[28px]">
@@ -172,7 +189,7 @@ const Dashboard = () => {
                         <p>{priority}</p>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -193,7 +210,7 @@ const Dashboard = () => {
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                  className="w-full border px-3 py-2 rounded-md text-sm"
                   placeholder="Type here..."
                 />
               </div>
@@ -203,7 +220,7 @@ const Dashboard = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                  className="w-full border px-3 py-2 rounded-md text-sm"
                   placeholder="Type here..."
                 />
               </div>
@@ -214,7 +231,7 @@ const Dashboard = () => {
                   type="date"
                   value={formData.date}
                   onChange={handleChange}
-                  className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                  className="w-full border px-3 py-2 rounded-md text-sm"
                 />
               </div>
               <div className="w-full mb-6">
