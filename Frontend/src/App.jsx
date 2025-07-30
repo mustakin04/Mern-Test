@@ -8,6 +8,7 @@ import Registration from './pages/registration';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import TaskDetails from './pages/TaskDetails';
+import SpinWheel from './pages/SpinWeel';
 
 function App() {
  const router = createBrowserRouter([
@@ -27,7 +28,10 @@ function App() {
     path: "/taskDetails/:id",
     Component: TaskDetails,
   },
-
+  {
+    path: "/spin",
+    Component: SpinWheel,
+  }
 ]);
 
   return (

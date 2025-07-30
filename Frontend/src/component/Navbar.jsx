@@ -5,6 +5,7 @@ import { RiTaskFill } from "react-icons/ri";
 import { PiSpinnerFill } from "react-icons/pi";
 import img from "../assets/profile.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { Link } from "react-router";
 
 
 const Navbar = () => {
@@ -24,12 +25,12 @@ const Navbar = () => {
               Task List
             </p>
           </div>
-          <div className="flex items-center gap-[10px]">
+          <Link to="/spin" className="flex items-center gap-[10px]">
             <PiSpinnerFill className="text-2xl text-white" />
             <p className="font-poppins font-medium text-[24px] text-white">
-              Task List
+              Spin
             </p>
-          </div>
+          </Link>
         </div>
         <div className="flex items-center gap-[10px]">
           <div className="h-[27px] w-[27px] rounded-full overflow-hidden">
