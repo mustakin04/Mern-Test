@@ -1,44 +1,42 @@
-import { useState } from 'react'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router";
-import './App.css'
-import Registration from './pages/registration';
+import { createBrowserRouter, RouterProvider } from "react-router-dom"; // ✅ Fix: use react-router-dom
+import './App.css';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import TaskDetails from './pages/TaskDetails';
 import SpinWheel from './pages/SpinWeel';
+import Registration from './pages/Registration';
+import { Provider } from 'react-redux'// ✅ Fix: corrected path (assumed store.js is in src folder)
+import { store } from "../store";
 
-function App() {
- const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
-    Component: Registration,
+    element: <Registration />,
   },
   {
     path: "/login",
-    Component: Login,
+    element: <Login />,
   },
   {
     path: "/dashboard",
-    Component: Dashboard,
+    element: <Dashboard />,
   },
-    {
+  {
     path: "/taskDetails/:id",
-    Component: TaskDetails,
+    element: <TaskDetails />,
   },
   {
     path: "/spin",
-    Component: SpinWheel,
+    element: <SpinWheel />,
   }
 ]);
 
+function App() {
   return (
-    <>
-     <RouterProvider router={router} />,
-    </>
-  )
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 }
 
-export default App
+export default App;

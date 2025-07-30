@@ -5,6 +5,7 @@ import { FaEyeSlash, FaEye } from "react-icons/fa6";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -18,77 +19,93 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const res = await axios.post("http://localhost:3002/api/v1/authentication/login", form);
-       toast.success(res.data.message)
-       navigate("/dashboard");
+      toast.success(res.data.message);
+      setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error) {
       const errMsg = error.response?.data?.message || "Login failed";
-       toast.error(errMsg)
+      toast.error(errMsg);
     }
   };
 
   return (
-    <div className="py-10">
+    <div className="min-h-screen flex items-center justify-center bg-white px-4 py-8">
       <Container>
-        <div className="flex flex-col sm:flex-row items-center">
-          <div className="w-full sm:w-1/2 mb-8 sm:mb-0 px-4">
-            <img src={img} alt="Login" className="w-full h-auto sm:h-[500px] md:h-screen object-cover rounded-md" />
+        <div className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg overflow-hidden">
+          
+          {/* Left Image */}
+          <div className="w-full md:w-1/2">
+            <img
+              src={img}
+              alt="Login"
+              className="w-full h-full object-cover"
+            />
           </div>
 
-          <div className="w-full sm:w-1/2 px-4 sm:px-8 md:px-12">
-            <h1 className="text-[36px] text-center font-semibold">Login</h1>
-            <h3 className="text-center text-[#667085] mb-8 mt-2">Welcome back! Please enter your details to log in.</h3>
+          {/* Right Form */}
+          <div className="w-full md:w-1/2 px-6 py-8 md:p-12">
+            <h1 className="text-3xl font-bold text-center">Login</h1>
+            <p className="text-center text-gray-600 mt-2 mb-6">
+              Welcome back! Please enter your details to log in.
+            </p>
 
-            {/* Email */}
-            <div className="my-6">
-              <p className="font-semibold mb-2">Email Address</p>
+            {/* Email Input */}
+            <div className="mb-5">
+              <label className="block font-medium mb-2">Email Address</label>
               <input
                 name='email'
                 type="email"
                 onChange={handleChange}
                 value={form.email}
-                className="w-full py-3 pl-5 shadow-md rounded-md outline-none"
-                placeholder="Enter your email address"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                placeholder="Enter your email"
               />
             </div>
 
-            {/* Password */}
-            <div className="relative my-6">
-              <p className="font-semibold mb-2">Password</p>
+            {/* Password Input */}
+            <div className="mb-5 relative">
+              <label className="block font-medium mb-2">Password</label>
               <input
                 name='password'
                 type={show ? "text" : "password"}
                 onChange={handleChange}
                 value={form.password}
-                className="w-full py-3 pl-5 shadow-md rounded-md outline-none"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 placeholder="********"
               />
-              <div className="absolute top-[44px] right-[20px] cursor-pointer" onClick={() => setShow(!show)}>
-                {show ? <FaEye className="text-xl" /> : <FaEyeSlash className="text-xl" />}
+              <div
+                className="absolute top-[38px] right-4 cursor-pointer text-gray-600"
+                onClick={() => setShow(!show)}
+              >
+                {show ? <FaEye /> : <FaEyeSlash />}
               </div>
             </div>
 
             {/* Login Button */}
-            <div className="w-full bg-[#60e5ae] my-8 rounded-md cursor-pointer hover:bg-[#4ad49b] transition" onClick={handleLogin}>
-              <p className="font-semibold text-[17px] text-center py-3">Login</p>
-            </div>
+            <button
+              className="w-full bg-green-400 hover:bg-green-500 text-white font-semibold py-3 rounded-lg transition"
+              onClick={handleLogin}
+            >
+              Login
+            </button>
 
             {/* Divider */}
-            <div className="flex items-center justify-center mx-4">
-              <div className="w-2/5 h-px bg-[#667085]"></div>
-              <p className="text-[15px] text-[#667085] mx-2">Or</p>
-              <div className="w-2/5 h-px bg-[#667085]"></div>
+            <div className="flex items-center justify-center my-6">
+              <div className="w-1/3 h-px bg-gray-300"></div>
+              <span className="mx-3 text-sm text-gray-500">Or</span>
+              <div className="w-1/3 h-px bg-gray-300"></div>
             </div>
 
             {/* Signup Link */}
-            <div className="mt-6">
-              <p className="text-[15px] text-[#667085] text-center">
-                Don’t have an account? <span className="text-[#1f1f1f] cursor-pointer hover:underline">Sign Up</span>
-              </p>
-            </div>
+            <p className="text-center text-sm text-gray-600">
+              Don’t have an account?{' '}
+              <Link to='/' className="text-gray-800 font-medium hover:underline">
+                Sign Up
+              </Link>
+            </p>
           </div>
-           <Toaster />
         </div>
       </Container>
+      <Toaster />
     </div>
   );
 };

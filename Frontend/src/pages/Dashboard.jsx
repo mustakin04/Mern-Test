@@ -11,8 +11,11 @@ import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router";
+import { useDispatch } from "react-redux";
+import { userData } from "../../slices/cardSlices";
 
 const Dashboard = () => {
+  const dispatch=useDispatch()
   const [show, setShow] = useState(false);
   const [allTask, setAllTask] = useState([]);
   const [formData, setFormData] = useState({
@@ -65,6 +68,8 @@ const Dashboard = () => {
         formData
       );
       toast.success(result.data.message);
+      console.log(result.data.task)
+      dispatch(userData(result.data))
       setShow(false);
       setFormData({ title: "", description: "", date: "", priority: "" });
       getTask();

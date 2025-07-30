@@ -1,145 +1,157 @@
 import React, { useState } from 'react';
-import reg from "../assets/registration.jpg";
+import reg from '../assets/registration.jpg';
 import Container from '../component/Container';
-import { FaEyeSlash, FaEye } from "react-icons/fa6";
+import { FaEyeSlash, FaEye } from 'react-icons/fa6';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Registration = () => {
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [confirm, setConfirm] = useState(false);
-  const[formData,setFormData]=useState({
-    fullName:"",
-    email:"",
-    password:"",
-    repassword:"",
-  })
-    
-  const handleChange=(e)=>{
-       setFormData({...formData,[e.target.name] : e.target.value})
-  }
-  const handleClick = async () => {
-  try {
-    const response = await axios.post(
-      'http://localhost:3002/api/v1/authentication/registration',
-      formData
-    );
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    repassword: '',
+  });
 
-    toast.success(response.data.message); 
-  } catch (error) {
-    const message = error.response?.data?.message || "Something went wrong";
-    toast.error(message)
-  }
-     
-  }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleClick = async () => {
+    const { fullName, email, password, repassword } = formData;
+
+    if (!fullName || !email || !password || !repassword) {
+      return toast.error('All fields are required');
+    }
+
+    if (password !== repassword) {
+      return toast.error('Passwords do not match');
+    }
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3002/api/v1/authentication/registration',
+        formData
+      );
+      toast.success(response.data.message);
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (error) {
+      const message = error.response?.data?.message || 'Something went wrong';
+      toast.error(message);
+    }
+  };
+
   return (
     <div className="py-10">
       <Container>
-        <div className="flex flex-col sm:flex-row items-center">
-          
-          {/* Left Image */}
-          <div className="w-full sm:w-1/2 mb-8 sm:mb-0 px-4">
-            <img
-              src={reg}
-              alt="Registration"
-              className="w-full h-auto sm:h-[500px] md:h-screen object-cover rounded-md"
-            />
-          </div>
-
+        <div className="flex flex-col-reverse lg:flex-row items-center">
           {/* Right Form */}
-          <div className="w-full sm:w-1/2 px-4 sm:px-8 md:px-12">
-            <h1 className="font-poppins font-semibold text-[26px] sm:text-[32px] md:text-[36px] text-center text-[#1f1f1f]">
-              Sign Up
-            </h1>
-            <h3 className="font-poppins font-medium text-[14px] sm:text-[16px] text-center text-[#667085] mb-8 mt-2">
-              To Create Account, Please Fill in the Form Below.
-            </h3>
+          <div className="w-full lg:w-1/2 px-6 sm:px-10">
+            <h1 className="text-[28px] sm:text-[34px] text-center font-bold">Sign Up</h1>
+            <p className="text-sm sm:text-base text-center text-gray-500 mb-8 mt-2">
+              Please fill the form to create an account.
+            </p>
 
             {/* Full Name */}
-            <div>
-              <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Full Name</p>
-              <input 
-                name='fullName'
+            <div className="mb-5">
+              <label className="font-medium">Full Name</label>
+              <input
+                name="fullName"
                 onChange={handleChange}
                 type="text"
-                className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
+                className="w-full mt-2 py-3 px-4 shadow-md rounded-md outline-none placeholder:text-gray-400"
                 placeholder="Enter your full name"
               />
             </div>
 
             {/* Email */}
-            <div className="my-6">
-              <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Email Address</p>
+            <div className="mb-5">
+              <label className="font-medium">Email Address</label>
               <input
-                 name='email'
-                 onChange={handleChange}
+                name="email"
+                onChange={handleChange}
                 type="email"
-                className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
+                className="w-full mt-2 py-3 px-4 shadow-md rounded-md outline-none placeholder:text-gray-400"
                 placeholder="Enter your email address"
               />
             </div>
 
             {/* Password */}
-            <div className="relative my-6">
-              <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Password</p>
+            <div className="relative mb-5">
+              <label className="font-medium">Password</label>
               <input
-               name='password'
-                 onChange={handleChange}
-                type={show ? "text" : "password"}
-                className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
+                name="password"
+                onChange={handleChange}
+                type={show ? 'text' : 'password'}
+                className="w-full mt-2 py-3 px-4 shadow-md rounded-md outline-none placeholder:text-gray-400"
                 placeholder="********"
               />
               <div
-                className="absolute top-[44px] right-[20px] cursor-pointer"
+                className="absolute top-[52%] right-4 transform -translate-y-1/2 cursor-pointer"
                 onClick={() => setShow(!show)}
               >
-                {show ? <FaEye className="text-xl" /> : <FaEyeSlash className="text-xl" />}
+                {show ? <FaEye className="text-lg" /> : <FaEyeSlash className="text-lg" />}
               </div>
             </div>
 
             {/* Confirm Password */}
-            <div className="relative">
-              <p className="font-semibold text-[15px] sm:text-[16px] mb-2">Confirm Password</p>
+            <div className="relative mb-6">
+              <label className="font-medium">Confirm Password</label>
               <input
-              name='repassword'
-                 onChange={handleChange}
-                type={confirm ? "text" : "password"}
-                className="w-full py-3 pl-5 shadow-md rounded-md outline-none placeholder:text-[#667085]"
-                placeholder="Retype Password"
+                name="repassword"
+                onChange={handleChange}
+                type={confirm ? 'text' : 'password'}
+                className="w-full mt-2 py-3 px-4 shadow-md rounded-md outline-none placeholder:text-gray-400"
+                placeholder="Retype password"
               />
               <div
-                className="absolute top-[44px] right-[20px] cursor-pointer"
+                className="absolute top-[52%] right-4 transform -translate-y-1/2 cursor-pointer"
                 onClick={() => setConfirm(!confirm)}
               >
-                {confirm ? <FaEye className="text-xl" /> : <FaEyeSlash className="text-xl" />}
+                {confirm ? <FaEye className="text-lg" /> : <FaEyeSlash className="text-lg" />}
               </div>
             </div>
 
             {/* Sign Up Button */}
-            <div className="w-full bg-[#60e5ae] my-8 rounded-md cursor-pointer hover:bg-[#4ad49b]
-             transition"
-             onClick={handleClick}>
-              <p className="font-semibold text-[17px] text-center py-3">Sign Up</p>
-            </div>
+            <button
+              onClick={handleClick}
+              className="w-full bg-[#60e5ae] text-black font-semibold text-[17px] py-3 rounded-md hover:bg-[#4ad49b] transition"
+            >
+              Sign Up
+            </button>
 
             {/* Divider */}
-            <div className="flex items-center justify-center mx-4">
-              <div className="w-2/5 h-px bg-[#667085]"></div>
-              <p className="text-[15px] text-[#667085] mx-2">Or</p>
-              <div className="w-2/5 h-px bg-[#667085]"></div>
+            <div className="flex items-center justify-center my-6">
+              <div className="w-1/4 h-px bg-gray-400"></div>
+              <p className="mx-4 text-gray-500 text-sm">OR</p>
+              <div className="w-1/4 h-px bg-gray-400"></div>
             </div>
 
-            {/* Already have an account */}
-            <div className="mt-6">
-              <p className="text-[15px] text-[#667085] text-center">
-                Already have an account?{" "}
-                <span className="text-[#1f1f1f] cursor-pointer hover:underline">Log In</span>
-              </p>
-            </div>
-           
+            {/* Login Redirect */}
+            <p className="text-center text-sm text-gray-500">
+              Already have an account?{' '}
+              <Link to="/login" className="text-black font-medium hover:underline">
+                Log In
+              </Link>
+            </p>
           </div>
-          <Toaster />
+
+          {/* Left Image */}
+          <div className="w-full lg:w-1/2 px-4 mb-10 lg:mb-0">
+            <img
+              src={reg}
+              alt="Registration"
+              className="w-full h-auto lg:h-screen object-cover rounded-lg"
+            />
+          </div>
         </div>
+        <Toaster />
       </Container>
     </div>
   );
