@@ -78,4 +78,18 @@ This MERN (MongoDB, Express, React, Node.js) web application helps users securel
 ---
 
 ## 🗂 Folder Structure Example
+/backend
+├── controllers/
+├── models/
+├── routes/
+├── middleware/
+└── server.js
+
+/frontend
+├── components/
+├── features/ (Redux slices)
+├── pages/
+├── redux/
+│ └── store.js
+└── App.jsx
 
