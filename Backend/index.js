@@ -17,8 +17,8 @@ app.use(cookieParser());
 
 // ✅ CORS setup for Localhost + Netlify
 const allowedOrigins = [
+  "https://your-netlify-site.netlify.app" ,// 🔁 Replace with your actual Netlify site URL
   "http://localhost:5173",
-  "https://your-netlify-site.netlify.app" // 🔁 Replace with your actual Netlify site URL
 ];
 
 app.use(cors({
