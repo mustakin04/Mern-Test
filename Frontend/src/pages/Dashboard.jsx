@@ -43,7 +43,7 @@ const Dashboard = () => {
   const getTask = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3002/api/v1/task/getAllTask",
+        "https://mern-test-9ndt.onrender.com/api/v1/task/getAllTask",
         { withCredentials: true }
       );
 
@@ -65,7 +65,7 @@ const Dashboard = () => {
   const handleSubmit = async () => {
     try {
       const result = await axios.post(
-        "http://localhost:3002/api/v1/task/createTask",
+        "https://mern-test-9ndt.onrender.com/api/v1/task/createTask",
         formData
       );
       toast.success(result.data.message);
@@ -83,7 +83,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     try {
       const deleteTask = await axios.delete(
-        `http://localhost:3002/api/v1/task/deletedSingleTask/${id}`
+        `https://mern-test-9ndt.onrender.com/api/v1/task/deletedSingleTask/${id}`
       );
       toast.success(deleteTask.data.message);
       setAllTask((prevTasks) => prevTasks.filter((task) => task._id !== id));

@@ -18,7 +18,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:3002/api/v1/authentication/login", form);
+      const res = await axios.post("https://mern-test-9ndt.onrender.com/api/v1/authentication/login", form);
       toast.success(res.data.message);
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error) {

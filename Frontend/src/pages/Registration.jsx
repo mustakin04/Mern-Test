@@ -34,7 +34,7 @@ const Registration = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3002/api/v1/authentication/registration',
+        'https://mern-test-9ndt.onrender.com/api/v1/authentication/registration',
         formData
       );
       toast.success(response.data.message);

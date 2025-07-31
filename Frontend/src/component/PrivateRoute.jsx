@@ -8,7 +8,7 @@ const PrivateRoute = ({ children }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/api/v1/authentication/getUser", {
+      .get("https://mern-test-9ndt.onrender.com/api/v1/authentication/getUser", {
         withCredentials: true,
       })
       .then((res) => {

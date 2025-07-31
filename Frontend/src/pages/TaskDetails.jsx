@@ -30,7 +30,7 @@ const TaskDetails = () => {
     const fetchTask = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3002/api/v1/task/getSingleTask/${id}`
+          `https://mern-test-9ndt.onrender.com/api/v1/task/getSingleTask/${id}`
         );
         setUpdate(response.data.task);
         setFormData({
@@ -63,7 +63,7 @@ const TaskDetails = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:3002/api/v1/task/updateTask/${id}`,
+        `https://mern-test-9ndt.onrender.com/api/v1/task/updateTask/${id}`,
         formData
       );
       toast.success(response.data.message);
@@ -79,7 +79,7 @@ const TaskDetails = () => {
   const handleYes=async()=>{
          try{
          const deleteTask=await 
-        axios.delete(`http://localhost:3002/api/v1/task/deletedSingleTask/${id}`)
+        axios.delete(`https://mern-test-9ndt.onrender.com/api/v1/task/deletedSingleTask/${id}`)
         toast.success(deleteTask.data.message)
        setTimeout(() => {
       navigate("/dashboard");
