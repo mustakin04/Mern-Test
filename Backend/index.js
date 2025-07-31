@@ -18,7 +18,7 @@ app.use(cookieParser());
 // ✅ CORS setup for Localhost + Netlify
 const allowedOrigins = [
   "https://gilded-pika-fc3137.netlify.app/" ,// 🔁 Replace with your actual Netlify site URL
-  "http://localhost:5173",
+  // "http://localhost:5173",
 ];
 
 app.use(cors({
